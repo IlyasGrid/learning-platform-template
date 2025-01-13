@@ -5,17 +5,22 @@ const express = require('express');
 const config = require('./config/env');
 const db = require('./config/db');
 
-const courseRoutes = require('./routes/courseRoutes');
-const studentRoutes = require('./routes/studentRoutes');
+// const courseRoutes = require('./routes/courseRoutes');
+// const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 
 async function startServer() {
   try {
     // TODO: Initialiser les connexions aux bases de données
+    await db.connectMongo();  
+
     // TODO: Configurer les middlewares Express
     // TODO: Monter les routes
     // TODO: Démarrer le serveur
+    app.listen(config.port, () => {
+      console.log(`Server is running on http://localhost:${3000}`);
+    });
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
