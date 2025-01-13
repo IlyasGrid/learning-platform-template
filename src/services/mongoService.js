@@ -5,14 +5,19 @@ const { ObjectId } = require('mongodb');
 const db = require('../config/db');
 
 // Fonctions utilitaires pour MongoDB
-async function createCourse(course) {
+async function createCourse(course) {  
+  
   const collection = db.db.collection('courses');
+  
+  console.log(collection);
   const result = await collection.insertOne(course);
-  return result.ops[0];
+  
+  return result;
 }
 
 async function getCourse(id) {
   const collection = db.db.collection('courses');
+  
   const course = await collection.findOne({ _id: ObjectId(id) });
   return course;
 }

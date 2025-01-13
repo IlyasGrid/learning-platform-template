@@ -10,8 +10,10 @@ const redisService = require('../services/redisService');
 
 async function createCourse(req, res) {
   try {
+    
     const course = req.body;
     const result = await mongoService.createCourse(course);
+    
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create course' });
@@ -31,7 +33,7 @@ async function getCourse(req, res) {
   }
 }
 
-async function getCourseStats(req, res) {
+async function getCourseStats(req, res) {  
   try {
     const stats = await mongoService.getCourseStats();
     res.status(200).json(stats);

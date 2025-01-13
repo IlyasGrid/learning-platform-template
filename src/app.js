@@ -14,9 +14,16 @@ async function startServer() {
   try {
     // TODO: Initialiser les connexions aux bases de données
     await db.connectMongo();  
+    // await db.connectRedis();
 
     // TODO: Configurer les middlewares Express
+    app.use(express.json());
+
     // TODO: Monter les routes
+    app.use('/courses', courseRoutes);
+    app.use('/students', studentRoutes);
+
+
     // TODO: Démarrer le serveur
     app.listen(config.port, () => {
       console.log(`Server is running on http://localhost:${config.port}`);
