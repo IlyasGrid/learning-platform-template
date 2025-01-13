@@ -5,8 +5,8 @@ const express = require('express');
 const config = require('./config/env');
 const db = require('./config/db');
 
-// const courseRoutes = require('./routes/courseRoutes');
-// const studentRoutes = require('./routes/studentRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 
@@ -19,7 +19,7 @@ async function startServer() {
     // TODO: Monter les routes
     // TODO: Démarrer le serveur
     app.listen(config.port, () => {
-      console.log(`Server is running on http://localhost:${3000}`);
+      console.log(`Server is running on http://localhost:${config.port}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
@@ -29,7 +29,19 @@ async function startServer() {
 
 // Gestion propre de l'arrêt
 process.on('SIGTERM', async () => {
-  // TODO: Implémenter la fermeture propre des connexions
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close(async () => {
+    console.log('HTTP server closed');
+    if (mongoClient) {
+      await mongoClient.close();
+      console.log('MongoDB connection closed');
+    }
+    if (redisClient) {
+      await redisClient.quit();
+      console.log('Redis connection closed');
+    }
+    process.exit(0);
+  });
 });
 
 startServer();
