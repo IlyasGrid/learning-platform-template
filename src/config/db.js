@@ -15,7 +15,7 @@ async function connectMongo() {
       const client = new MongoClient(config.mongodb.uri);
       await client.connect();
       console.log("Connected to MongoDB successfully");
-      db = client.db(config.mongodb.dbName);
+      db = client.db(config.mongodb.dbName);      
       mongoClient = client;
       // Gérer les erreurs et les retries
   } catch (error) {
@@ -33,7 +33,7 @@ async function connectRedis() {
         console.error("Error connecting to Redis:", err);
       });
       await redisClient.connect();
-      console.log("Connected to Redis successfully");
+      console.log("Connected to Redis successfully"); 
       // Gérer les erreurs et les retries
   } catch (error) {
     console.error("Error connecting to Redis:", error);
@@ -42,6 +42,15 @@ async function connectRedis() {
 
 // Export des fonctions et clients
 module.exports = {
+  get mongoClient() {
+    return mongoClient;
+  },
+  get db() {
+    return db;
+  },
+  get redisClient() {
+    return redisClient;
+  },
   connectMongo,
   connectRedis,
 };

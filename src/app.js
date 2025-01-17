@@ -14,7 +14,7 @@ async function startServer() {
   try {
     // TODO: Initialiser les connexions aux bases de données
     await db.connectMongo();  
-    // await db.connectRedis();
+    await db.connectRedis();
 
     // TODO: Configurer les middlewares Express
     app.use(express.json());

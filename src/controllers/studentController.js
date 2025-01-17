@@ -12,6 +12,7 @@ async function createStudent(req, res) {
   try {
     const student = req.body;
     const result = await mongoService.createStudent(student);
+    await redisService.cacheStudent(result._id, result); // Cache the student in Redis
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create student' });
@@ -21,9 +22,13 @@ async function createStudent(req, res) {
 async function getStudent(req, res) {
   try {
     const studentId = req.params.id;
-    const student = await mongoService.getStudent(ObjectId(studentId));
+    let student = await redisService.getCachedStudent(studentId); // Try to get student from Redis
     if (!student) {
-      return res.status(404).json({ error: 'Student not found' });
+      student = await mongoService.getStudent(studentId);
+      if (!student) {
+        return res.status(404).json({ error: 'Student not found' });
+      }
+      await redisService.cacheStudent(studentId, student); // Cache the student in Redis
     }
     res.status(200).json(student);
   } catch (error) {
@@ -42,9 +47,6 @@ async function getStudentStats(req, res) {
 
 // Export des contrôleurs
 module.exports = {
-  createCourse,
-  getCourse,
-  getCourseStats,
   createStudent,
   getStudent,
   getStudentStats,
